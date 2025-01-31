@@ -6,12 +6,19 @@ A very basic dashboard to modify sandbox settings for Abiotic Factor dedicated s
 
 ## Setup
 
+### Environment Variables
+
+| Variable         | Description                                                                                                                                                            |
+| ---------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| SANDBOX_INI_PATH | The path to SandboxIniPath on your dedicated server (note this path should start with /gamefiles because ./data is mounted to /gamefiles on the powercore95 contianer) |
+| CONTAINER_NAME   | The name of the abiotic-server container (should match the container_name of your abiotic server, otherwise restarts will not work)                                    |
+| SERVER_NAME      | Modify the site title                                                                                                                                                  |
+
 When making modifications to the compose file, consider the following:
 
-- SANDBOX_INI_PATH should match the path of SandboxIniPath in your dedicated server
-- CONTAINER_NAME should match the container_name of your abiotic server, otherwise restarts will not work
-- depends_on is not strictly needed but if you are provisioning a server for the first time
+- `depends_on` is not strictly needed but if you are provisioning a server for the first time
   the sandbox settings will not be created before the server starts.
+- After the container is started the site will be available at http://localhost:9090 (or your server/VPS IP if you are not on the host itself)
 
 ```yaml
 services:
