@@ -1,0 +1,5 @@
+test*.ini
+doc/example/data/*
+doc/example/gamefiles/*
+src/data/Sandbox.ini
+src/data/sandbox.ini

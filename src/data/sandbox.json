@@ -1,0 +1,40 @@
+{
+    "rangeInputs": [
+        {"key": "GameDifficulty", "default": 1, "inputType": "world", "min": 1, "max": 3, "step": 1 },
+        {"key": "DayNightCycleState", "default": 0, "inputType": "world", "min": 0, "max": 2, "step": 1 },
+        {"key": "DayNightCycleSpeedMultiplier", "default": 1.0, "inputType": "world", "min": 0.1, "max": 3.0, "step": 0.1 },
+        {"key": "SinkRefillRate", "default": 1.0, "inputType": "world", "min": 0, "max": 10.0, "step": 0.1 },
+        {"key": "FoodSpoilSpeedMultiplier", "default": 1.0, "inputType": "world", "min": 0.0, "max": 2.0, "step": 0.1 },
+        {"key": "RefrigerationEffectivenessMultiplier", "default": 1.0, "inputType": "world", "min": 0.0, "max": 2.0, "step": 0.1 },
+        {"key": "StructuralSupportLimit", "default": 5, "inputType": "world", "min": 0, "max": 5, "step": 1 },
+        {"key": "EnemySpawnRate", "default": 1.0, "inputType": "enemy", "min": 0.5, "max": 3.0, "step": 0.1 },
+        {"key": "EnemyHealthMultiplier", "default": 1.0, "inputType": "enemy", "min": 0.75, "max": 3.0, "step": 0.01 },
+        {"key": "EnemyPlayerDamageMultiplier", "default": 1.0, "inputType": "enemy", "min": 0.25, "max": 3.0, "step": 0.01 },
+        {"key": "EnemyDeployableDamageMultiplier", "default": 1.0, "inputType": "enemy", "min": 0.1, "max": 5.0, "step": 0.1 },
+        {"key": "DetectionSpeedMultiplier", "default": 1.0, "inputType": "enemy", "min": 0.1, "max": 3.0, "step": 0.1 },
+        {"key": "DamageToAlliesMultiplier", "default": 0.5, "inputType": "player", "min": 0.0, "max": 3.0, "step": 0.1 },
+        {"key": "HungerSpeedMultiplier", "default": 1.0, "inputType": "player", "min": 0.0, "max": 2.0, "step": 0.1 },
+        {"key": "ThirstSpeedMultiplier", "default": 1.0, "inputType": "player", "min": 0.0, "max": 2.0, "step": 0.1 },
+        {"key": "FatigueSpeedMultiplier", "default": 1.0, "inputType": "player", "min": 0.0, "max": 2.0, "step": 0.1 },
+        {"key": "ContinenceSpeedMultiplier", "default": 1.0, "inputType": "player", "min": 0.0, "max": 2.0, "step": 0.1 },
+        {"key": "PlayerXPGainMultiplier", "default": 1.0, "inputType": "player", "min": 0.0, "max": 3.0, "step": 0.1 },
+        {"key": "ItemStackSizeMultiplier", "default": 1.0, "inputType": "player", "min": 1.0, "max": 30.0, "step": 0.1 },
+        {"key": "ItemWeightMultiplier", "default": 1.0, "inputType": "player", "min": 0.0, "max": 5.0, "step": 0.1 },
+        {"key": "ItemDurabilityMultiplier", "default": 1.0, "inputType": "player", "min": 0.1, "max": 10.0, "step": 0.1 },
+        {"key": "DurabilityLossOnDeathMultiplier", "default": 1.0, "inputType": "player", "min": 0.0, "max": 1.0, "step": 0.1 },
+        {"key": "DeathPenalties", "default": 0, "inputType": "player", "min": 0, "max": 5, "step": 1 },
+        {"key": "FirstTimeStartingWeapon", "default": 0, "inputType": "player", "min": 0, "max": 6, "step": 1 }
+    ],
+    "toggleInputs": [
+        {"key": "LootRespawnEnabled", "default": false, "inputType": "world" },
+        {"key": "PowerSocketsOffAtNight", "default": true, "inputType": "world" },
+        {"key": "StorageByTag", "default": true, "inputType": "world" },
+        {"key": "ShowDeathMessages", "default": true, "inputType": "player" },
+        {"key": "AllowRecipeSharing", "default": true, "inputType": "player" },
+        {"key": "AllowPagers", "default": true, "inputType": "player" },
+        {"key": "AllowTransmog", "default": true, "inputType": "player" },
+        {"key": "DisableResearchMinigame", "default": false, "inputType": "player" },
+        {"key": "GlobalRecipeUnlocks", "default": false, "inputType": "player" },
+        {"key": "HostAccessPlayerCorpses", "default": true, "inputType": "player" }
+    ]
+}

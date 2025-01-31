@@ -1,0 +1,254 @@
+{{ define "content" }}
+
+<nav>
+    <ul>
+        <li><h1 id="server-name-header">{{ .Title }}</li></h1>
+    </ul>
+    <ul>
+        <li>
+        <section id="modal">
+            <button id="restart-server-btn" class="outline contrast" data-target="modal-restart-server" onclick="toggleModal(event)">
+               Restart Server
+            </button>
+        </section>
+        </li>
+        <li><button form="configForm" data-target="modal-settings-saved" onclick="ModalFormHandler(event)" >Save</button></li>
+    </ul>
+</nav>
+
+<form id="configForm" >
+<div class="grid">
+    {{ range $grid := .GridContainers }}
+        <div class="{{toLower $grid}}configs-container">
+            <details open>
+                <summary>{{ $grid }} Configs</summary>
+                {{ range $index, $value := $.DefaultConfigs.ToggleInputs }}
+                {{ if eq .InputType (toLower $grid) }}
+                <fieldset style="padding-bottom: 10px;">
+                    <legend>{{ $value.Key }}</legend>
+                        <input id="toggle-true-{{ $index }}" class="toggle-true" type="radio" name="{{ $value.Key }}" {{ if GetSandboxConfig
+                            $value.Key $.Current }}checked{{end}} />
+                        <label htmlFor="{{ $value.Key }}">True</label>
+
+                        <input id="toggle-false-{{ $index }}" class="toggle-false" type="radio" name="{{ $value.Key }}" {{ if not
+                            (GetSandboxConfig $value.Key $.Current) }}checked{{end}} />                
+                        <label htmlFor="{{ $value.Key }}">False</label>
+                </fieldset>
+                {{ end }}
+                {{ end }}
+        
+                {{ range $value := $.DefaultConfigs.RangeInputs }}
+                {{ if eq .InputType (toLower $grid) }}
+                <label>
+                    <div class="range-label">
+                        {{ $value.Key }}
+                        <output class="pico-color-azure-350 range-output" id="output-{{ $value.Key }}"
+                            value="{{ GetSandboxConfig $value.Key $.Current }}">{{ GetSandboxConfig .Key $.Current
+                            }}</output>
+                    </div>
+                    <input name="{{ .Key }}" id="id-{{ $value.Key }}" type="range" value="{{ GetSandboxConfig $value.Key $.Current }}"
+                        min="{{ .Min }}" max="{{ .Max }}" step="{{ .Step }}"
+                        oninput="updateInput('output-{{ $value.Key }}', this.value)" />
+                </label>
+                {{ end }}
+                {{ end }}
+            </details>
+        </div>
+    {{ end }}
+</div>
+</form>
+<dialog id="modal-restart-server">
+    <article>
+        <header>
+            <button aria-label="Close" rel="prev" data-target="modal-restart-server" onclick="toggleModal(event)"></button>
+            <h3>Heads up!</h3>
+        </header>
+        <p>
+            You are about to restart your dedicated server
+        </p>
+        <footer>
+            <button role="button" class="secondary" data-target="modal-restart-server" onclick="toggleModal(event)">
+                Cancel
+            </button>
+            <button id="confirm-container-restart" autofocus data-target="modal-restart-server" onclick="ModalRestartHandler(event)">
+                Confirm
+            </button>
+        </footer>
+    </article>
+</dialog>
+
+<dialog id="modal-settings-saved">
+<article>
+    <header>
+        <button aria-label="Close" rel="prev" data-target="modal-settings-saved" onclick="toggleModal(event)"></button>
+        <p>
+            <strong id="form-modal-header"></strong>
+        </p>
+    </header>
+    <p id="form-modal-text"></p>
+</article>
+</dialog>
+
+<script>
+    function updateInput(key, val) {
+        document.getElementById(key).value=val
+    }
+
+    async function ModalRestartHandler(event) {
+        event.preventDefault();
+        targetButton = document.getElementById("confirm-container-restart")
+
+        targetButton.setAttribute("aria-busy", "true")
+        targetButton.setAttribute("aria-label", "Restarting server...")
+        targetButton.innerText = "Restarting server..."
+
+        await ContainerRestartHandler(event)
+
+        targetButton.setAttribute("aria-busy", "false")
+        targetButton.removeAttribute("aria-label")
+
+        toggleModal(event);
+    }
+
+    async function ContainerRestartHandler(event) {
+        event.preventDefault();
+
+        try {
+            const response = await fetch("/restart-container", { method: "POST" });
+            const data = await response.text();
+
+            document.getElementById("form-modal-header").innerText = "Success!";
+            document.getElementById("form-modal-text").innerText = "Your settings have been saved";
+
+            return data;
+        } catch (error) {
+            document.getElementById("form-modal-header").innerText = "Failed!";
+            document.getElementById("form-modal-text").innerText = "Something went wrong.";
+
+            throw error
+        }
+    }
+
+    function ModalFormHandler(event) {
+        event.preventDefault();
+        const form = document.getElementById("configForm")
+        const formData = new FormData(form);
+
+        const formObject = {};
+        formData.forEach((value, key) => {
+            if (value == 'true') {
+                formObject[key] = true
+            } else if (value == 'false') {
+                formObject[key] = false
+            } else if (!isNaN(value) && value.trim() !== "") {
+                formObject[key] = Number(value);
+            } else {
+                formObject[key] = value;
+            }
+        });
+
+        fetch("/write-ini", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",  // Specify JSON content
+            },
+            body: JSON.stringify(formObject),
+        }).then(response => response.text())
+            .then(data => {
+                document.getElementById("form-modal-header").innerText = "Success!"
+                document.getElementById("form-modal-text").innerText = "Your settings have been saved"
+                toggleModal(event)
+            })
+            .catch(error => {
+                document.getElementById("form-modal-header").innerText = "Failed!"
+                document.getElementById("form-modal-text").innerText = "Something went wrong."
+                toggleModal(event)
+            });
+    }
+
+    window.addEventListener('load', function () {
+        toggleTrueElements = document.getElementsByClassName("toggle-true");
+        toggleFalseElements = document.getElementsByClassName("toggle-false")
+
+        for (let i = 0; i < toggleTrueElements.length; i++) {
+            toggleTrueElements[i].value = true
+        }
+
+        for (let i = 0; i < toggleFalseElements.length; i++) {
+            toggleFalseElements[i].value = false
+        }
+    });
+
+    // MODAL boilerplate
+    const isOpenClass = "modal-is-open";
+    const openingClass = "modal-is-opening";
+    const closingClass = "modal-is-closing";
+    const scrollbarWidthCssVar = "--pico-scrollbar-width";
+    const animationDuration = 400; // ms
+    let visibleModal = null;
+
+    const toggleModal = async (event) => {
+        const targetButton = event.target.closest("[data-target]");
+        if (!targetButton) return; 
+
+        const modalId = targetButton.dataset.target;
+        const modal = document.getElementById(modalId);
+        if (!modal) return; 
+
+        modal.open ? closeModal(modal) : openModal(modal);
+    };
+
+    // Open modal
+    const openModal = (modal) => {
+        const { documentElement: html } = document;
+        const scrollbarWidth = getScrollbarWidth();
+        if (scrollbarWidth) {
+            html.style.setProperty(scrollbarWidthCssVar, `${scrollbarWidth}px`);
+        }
+        html.classList.add(isOpenClass, openingClass);
+        setTimeout(() => {
+            visibleModal = modal;
+            html.classList.remove(openingClass);
+        }, animationDuration);
+        modal.showModal();
+    };
+
+    // Close modal
+    const closeModal = (modal) => {
+        visibleModal = null;
+        const { documentElement: html } = document;
+        html.classList.add(closingClass);
+        setTimeout(() => {
+            html.classList.remove(closingClass, isOpenClass);
+            html.style.removeProperty(scrollbarWidthCssVar);
+            modal.close();
+        }, animationDuration);
+    };
+
+    // Close with a click outside
+    document.addEventListener("click", (event) => {
+        if (visibleModal === null) return;
+        const modalContent = visibleModal.querySelector("article");
+        const isClickInside = modalContent.contains(event.target);
+        !isClickInside && closeModal(visibleModal);
+    });
+
+    // Close with Esc key
+    document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape" && visibleModal) {
+            closeModal(visibleModal);
+        }
+    });
+
+    // Get scrollbar width
+    const getScrollbarWidth = () => {
+        const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+        return scrollbarWidth;
+    };
+
+    // Is scrollbar visible
+    const isScrollbarVisible = () => {
+        return document.body.scrollHeight > screen.height;
+    };
+</script>
+{{ end }}

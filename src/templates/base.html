@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ .Title }}</title>
+    <link rel="stylesheet" href="static/pico-main/css/pico.min.css">
+    <link rel="stylesheet" href="static/pico-main/css/pico.colors.min.css">
+    <style>
+        @font-face {
+            font-family: Quicksand;
+            src: url(../static/fonts/Quicksand-Regular.ttf);
+        }
+
+        .worldconfigs-container {
+            margin-right: 48px;
+        }
+        .range-output {
+            float: right;
+        }
+        .playerconfigs-container {
+            margin-right: 48px;
+        }
+        .server-header-container {
+            padding: 24px;
+        }
+        .enemyconfigs-container {
+            margin-right: 48px;
+        }
+        .server-header-btn-container {
+        
+            display: inline-block;
+        }
+        #restart-server-btn {
+            float: left;
+        }
+        #config-form-btn {
+            float: right;
+        }
+
+        html {
+            font-family: "Quicksand", serif;
+            font-optical-sizing: auto;
+            font-weight: 400;
+            font-style: normal;
+        }
+        h1 {
+            --pico-font-family: "Quicksand", serif !important;
+        }
+
+    </style>
+</head>
+
+<body>
+    <div class="container" id="content">
+        {{ template "content" . }}
+    </div>
+</body>
+
+</html>
