@@ -24,7 +24,7 @@
                 <summary>{{ $grid }} Configs</summary>
                 {{ range $index, $value := $.DefaultConfigs.ToggleInputs }}
                 {{ if eq .InputType (toLower $grid) }}
-                <fieldset style="padding-bottom: 10px;">
+                <fieldset class="toggle-legend" style="padding-bottom: 10px;" data-tooltip="{{ $value.Tooltip }}" data-placement="bottom">
                     <legend>{{ $value.Key }}</legend>
                         <input id="toggle-true-{{ $index }}" class="toggle-true" type="radio" name="{{ $value.Key }}" {{ if GetSandboxConfig
                             $value.Key $.Current }}checked{{end}} />
@@ -40,7 +40,7 @@
                 {{ range $value := $.DefaultConfigs.RangeInputs }}
                 {{ if eq .InputType (toLower $grid) }}
                 <label>
-                    <div class="range-label">
+                    <div class="range-label range-legend" class="toggle-legend" data-placement="bottom" data-tooltip="{{ $value.Tooltip }}">
                         {{ $value.Key }}
                         <output class="pico-color-azure-350 range-output" id="output-{{ $value.Key }}"
                             value="{{ GetSandboxConfig $value.Key $.Current }}">{{ GetSandboxConfig .Key $.Current

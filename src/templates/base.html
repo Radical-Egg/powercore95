@@ -32,13 +32,28 @@
         
             display: inline-block;
         }
+        .toggle-legend {
+            border-bottom: none !important;
+        }
+        .range-legend {
+            border-bottom: none !important;
+        }
+        tooltip {
+            max-width: 20px !important;
+        }
         #restart-server-btn {
             float: left;
         }
         #config-form-btn {
             float: right;
         }
-
+        [data-tooltip]::after, [data-tooltip]::before, [data-tooltip][data-placement=top]::after, [data-tooltip][data-placement=top]::before {
+            text-wrap: pretty;
+            font-size: medium;
+            left: 0%;
+           
+            text-wrap: wrap;
+        }
         html {
             font-family: "Quicksand", serif;
             font-optical-sizing: auto;

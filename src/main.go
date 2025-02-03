@@ -249,12 +249,14 @@ type RangeInput struct {
 	Min       float64 `json:"min"`
 	Max       float64 `json:"max"`
 	Step      float64 `json:"step"`
+	Tooltip   string  `json:"tooltip"`
 }
 
 type ToggleInput struct {
 	Key       string `json:"key"`
 	InputType string `json:"inputType"`
 	Default   bool   `json:"default"`
+	Tooltip   string `json:"tooltip"`
 }
 
 type Config struct {
